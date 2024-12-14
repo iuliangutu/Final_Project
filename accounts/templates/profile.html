@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>User Profile</h1>
+<div class="card">
+    <div class="card-body">
+        <h4 class="card-title">Hello, {{ profile.user.first_name }} {{ profile.user.last_name }}!</h4>
+        <p><strong>Username:</strong> {{ profile.user.username }}</p>
+        <p><strong>Address:</strong> {{ profile.address }}</p>
+    </div>
+</div>
+
+{% comment %}
+<h2>Your Messages</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Message</th>
+            <th>Approved</th>
+            <th>Created At</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for msg in user_messages %}
+        <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ msg.message }}</td>
+            <td>{{ msg.approved }}</td>
+            <td>{{ msg.created_at }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="4">You have not sent any messages yet.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endcomment %}
+
+{% endblock %}

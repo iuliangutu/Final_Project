@@ -17,14 +17,18 @@ Including another URLconf
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 
-from shop.views import ProductView, OrderView, ProductCreateView, ProductUpdateView, ProductDeleteView
+from shop.views import ProductView, OrderView, ProductCreateView, ProductUpdateView, ProductDeleteView, \
+    ProductViewDetail
+from accounts import urls as accounts_urls
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('accounts/', include(accounts_urls, namespace='accounts')),
     path('', ProductView.as_view(), name='product-list'),
     path('create', ProductCreateView.as_view(success_url='/'), name='product-create'),
     path('update', ProductUpdateView.as_view(), name='product-update'),
     path('delete', ProductDeleteView.as_view(), name='product-delete'),
+    path('product/<pk>', ProductViewDetail.as_view(), name='product-view'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -6,5 +6,17 @@
 <img src="{{ movie.image_url }} " alt="{{ movie.title }}" style="max-width: 100px;">
 <p>Descriere: {{ object.description }}</p>
 <p>Price: {{ product.price }}</p>
+<p>Seller: {{ product.seller }}</p>
+<h2>Seller</h2>
+<ul>
+    <p> {{ seller }} </p>
+    {% comment %}
+    <a href="{% url '' %}"></a>
+    {% endcomment %}
+    {% if product.seller.logo %}
+        <img src="{{ product.seller.logo }}" alt="{{ product.seller.seller }}" style="max-width: 100px;">
+    {% endif %}
+</ul>
+<img src=" ">
 
 {% endblock %}

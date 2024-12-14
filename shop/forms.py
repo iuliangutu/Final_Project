@@ -17,8 +17,11 @@ class ProductForm(ModelForm):
     description = TextField()
     price = IntegerField()
 
-    # def clean(self):
-    #     result = super().clean()
-    #     if result['order']
+    def clean(self):
+        result = super().clean()
+        # if result['order']:
+
+        print(result)
+        return result
 
 

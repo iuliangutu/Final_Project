@@ -9,14 +9,14 @@ ORDER_STATUS_CHOICES = [('pending', 'Pending'), ('payment', 'Payment Confirmatio
                         ('shipped', 'Shipped'), ('status', 'Order Status'), # de adaugat redirect catre firma de curierat cu AWB
                         ('delivered', 'Delivered'), ('cancelled', 'Cancelled'),]
 
-class Client(Model):
-    class Meta:
-        verbose_name_plural = "Client"
-
-    username = CharField(max_length=128)
-    address = TextField()
-    phone = CharField(max_length=15, validators=[MinLengthValidator(10)])
-
+# class Client(Model):
+#     class Meta:
+#         verbose_name_plural = "Client"
+#
+#     username = CharField(max_length=128)
+#     address = TextField()
+#     phone = CharField(max_length=15, validators=[MinLengthValidator(10)])
+#
 
 class Category(Model):
     class Meta:
@@ -24,20 +24,19 @@ class Category(Model):
 
     name = CharField(max_length=128)
 
-
-
     def __str__(self):
         return self.name
 
 
-class Provider(Model):
-    brand = CharField(max_length=128)
-    logo = URLField(blank=True, null=True)
+class Seller(Model):
     seller = CharField(max_length=128)
+    logo = URLField(blank=True, null=True)
+
+    def __str__(self):
+        return self.seller
 
 class ProductType(Model):
     name = CharField(max_length=128)
-
 
     def __str__(self):
         return self.name
@@ -50,7 +49,7 @@ class Product(Model):
     category = ForeignKey(Category, on_delete=CASCADE)
     price = IntegerField()
     product_type = ForeignKey(ProductType, on_delete=CASCADE)
-    provider = ForeignKey(Provider, on_delete=CASCADE)
+    seller = ForeignKey(Seller, on_delete=CASCADE)
 
     def __str__(self):
         return self.title
@@ -59,7 +58,7 @@ class Product(Model):
 class OrderLine(Model):
     product = ForeignKey(Product, on_delete=CASCADE)
     number_of_products = IntegerField()
-    product_price = IntegerField()
+    # product_price = IntegerField()
 
 
 class Order(Model):
@@ -69,11 +68,11 @@ class Order(Model):
     user_address = TextField()
     order_date = DateTimeField(auto_now_add=True)
     order_lines = ForeignKey(OrderLine, on_delete=CASCADE)
-    client = ForeignKey(Client, on_delete=CASCADE)
+    # client = ForeignKey(Client, on_delete=CASCADE)
     status = CharField(max_length=128, choices=ORDER_STATUS_CHOICES)
 
     def __str__(self):
-        return f"Order id #{self.id} for {self.client.username}"
+        return f"Order id #{self.id}"
 
 
 class Cart(Model):
