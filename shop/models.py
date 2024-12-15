@@ -57,9 +57,8 @@ class Product(Model):
         return self.title
 
 class Order(Model):
-    username = CharField(max_length=128)
-    total_cost = IntegerField()
-    delivery_address = TextField()
+    total_cost = IntegerField(default=0)
+    delivery_address = TextField(default='')
     order_date = DateTimeField(auto_now_add=True)
     client = ForeignKey(Profile, on_delete=CASCADE)
     status = CharField(max_length=128, choices=ORDER_STATUS_CHOICES)
@@ -69,7 +68,7 @@ class Order(Model):
 
 class OrderLine(Model):
     product = ForeignKey(Product, on_delete=CASCADE)
-    number_of_products = IntegerField()
+    quantity = IntegerField()
     product_price = ForeignKey(Order, null=True, on_delete=CASCADE) # de facut null=False
 
 

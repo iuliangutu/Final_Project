@@ -4,9 +4,10 @@ from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, ListView
 
+from accounts.cart import AddToCart
 from accounts.forms import SignUpForm
 from accounts.models import Profile
-from shop.models import Order, OrderLine, Cart
+from shop.models import Order, OrderLine, Cart, Product
 
 
 # Create your views here.
@@ -45,6 +46,15 @@ class CartView(LoginRequiredMixin, ListView):
         profile = Profile.objects.get(user=self.request.user)
         return Cart.objects.filter(client=profile)
 
+
+def add_to_cart_view(request, product_id):
+    if request.user.is_authenticated:
+        quantity = int(request.POST.get('quantity', 1))
+        cart = AddToCart(request.user)
+        cart.add_product(product_id, quantity, product_price=cart.order)
+        return redirect(reverse_lazy('accounts:cart'))
+    else:
+        return redirect(reverse_lazy('accounts:login'))
 
 # de adaugat functionalitatea ca userul sa se logheze
 # atunci cand vrea sa faca o comanda
