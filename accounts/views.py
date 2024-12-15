@@ -1,8 +1,9 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.auth.views import LoginView, PasswordChangeView
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, ListView
+from django.views import View
+from django.views.generic import CreateView, ListView, DeleteView
 
 from accounts.cart import AddToCart
 from accounts.forms import SignUpForm
@@ -36,15 +37,30 @@ def profile_view(request):
         return redirect('/accounts/login/')
 
 
-class CartView(LoginRequiredMixin, ListView):
-    template_name = 'order.html'
-    model = Cart
-    login_url = '/accounts/login/'
-    redirect_field_name = 'redirect_to'
+# class CartView(LoginRequiredMixin):
+#     template_name = 'cart.html'
+#     model = Cart
+#     login_url = '/accounts/login/'
+#     redirect_field_name = 'redirect_to'
+#
+#
+#
+#     def get_queryset(self):
+#         profile = Profile.objects.get(user=self.request.user)
+#         return Cart.objects.filter(client=profile)
 
-    def get_queryset(self):
+
+class CartView(LoginRequiredMixin, View):
+    def get(self, request):
         profile = Profile.objects.get(user=self.request.user)
-        return Cart.objects.filter(client=profile)
+        cart = Cart.objects.get(client=profile)
+        return render(request, template_name='cart.html',
+                      context={'cart': cart})
+
+
+    # def actor_detail(request, actor_id):
+    #     actor = get_object_or_404(Actor, id=actor_id)
+    #     return render(request, 'actor_details.html', {'actor': actor})
 
 
 def add_to_cart_view(request, product_id):
@@ -58,4 +74,10 @@ def add_to_cart_view(request, product_id):
 
 # de adaugat functionalitatea ca userul sa se logheze
 # atunci cand vrea sa faca o comanda
+
+class OrderLineDeleteView(LoginRequiredMixin, DeleteView):
+    template_name = 'order_line_confirm_delete.html'
+    model = OrderLine
+    success_url = reverse_lazy('accounts:cart')
+
 

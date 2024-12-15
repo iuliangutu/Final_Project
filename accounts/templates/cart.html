@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Your cart</h1>
+
+<ul>
+    {{ cart }}
+
+    <style>
+        table, th, td {
+          border:1px solid black;
+        }
+    </style>
+    <table style="width:100%">
+        <tr>
+            <th>Produs </th>
+            <th>Quantity </th>
+            <th>Price </th>
+            <th>Delete </th>
+        </tr>
+        {% for item in cart.order_lines.all %}
+        <tr>
+            <td> {{ item.product }} </td>
+            <td> {{ item.quantity }} </td>
+            <td> {{ item.product.price }} </td>
+            <td><a href="{% url 'accounts:delete' item.pk %}"> Yes to confirm</a></td>
+        </tr>
+        {% endfor %}
+    </table>
+
+</ul>
+
+{% endblock %}

@@ -71,6 +71,10 @@ class OrderLine(Model):
     quantity = IntegerField()
     product_price = ForeignKey(Order, null=True, on_delete=CASCADE) # de facut null=False
 
+    def __str__(self):
+        return f"Order line no. {self.product}, {self.quantity}, {self.product_price}"
+
+
 
 class Cart(Model):
     order = OneToOneField(Order, on_delete=CASCADE)
@@ -78,7 +82,7 @@ class Cart(Model):
     client = OneToOneField(Profile, on_delete=CASCADE)
 
     def __str__(self):
-        return f"Cart for Order #{self.order.id}"
+        return f"Cart for Order #{self.order.id} User {self.client}"
 
 
 
