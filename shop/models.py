@@ -3,6 +3,8 @@ from django.db import models
 from django.db.models import CharField, Model, ForeignKey, DO_NOTHING, IntegerField, DateField, TextField, \
     DateTimeField, SlugField, URLField, ManyToManyField, CASCADE, OneToOneField
 
+from accounts.models import Profile
+
 # Create your models here.
 
 ORDER_STATUS_CHOICES = [('pending', 'Pending'), ('payment', 'Payment Confirmation'),
@@ -54,36 +56,30 @@ class Product(Model):
     def __str__(self):
         return self.title
 
-
-class OrderLine(Model):
-    product = ForeignKey(Product, on_delete=CASCADE)
-    number_of_products = IntegerField()
-    # product_price = IntegerField()
-
-
 class Order(Model):
     username = CharField(max_length=128)
     total_cost = IntegerField()
     delivery_address = TextField()
-    user_address = TextField()
     order_date = DateTimeField(auto_now_add=True)
-    order_lines = ForeignKey(OrderLine, on_delete=CASCADE)
-    # client = ForeignKey(Client, on_delete=CASCADE)
+    client = ForeignKey(Profile, on_delete=CASCADE)
     status = CharField(max_length=128, choices=ORDER_STATUS_CHOICES)
 
     def __str__(self):
         return f"Order id #{self.id}"
 
+class OrderLine(Model):
+    product = ForeignKey(Product, on_delete=CASCADE)
+    number_of_products = IntegerField()
+    product_price = ForeignKey(Order, null=True, on_delete=CASCADE) # de facut null=False
+
 
 class Cart(Model):
-    order = OneToOneField(Order, on_delete=models.CASCADE)
+    order = OneToOneField(Order, on_delete=CASCADE)
     order_lines = ManyToManyField(OrderLine)
+    client = OneToOneField(Profile, on_delete=CASCADE)
 
     def __str__(self):
         return f"Cart for Order #{self.order.id}"
-
-
-
 
 
 

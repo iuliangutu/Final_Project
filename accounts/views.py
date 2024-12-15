@@ -1,11 +1,14 @@
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.auth.views import LoginView, PasswordChangeView
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
-from django.views.generic import CreateView
+from django.views.generic import CreateView, ListView
 
 from accounts.forms import SignUpForm
 from accounts.models import Profile
+from shop.models import Order, OrderLine, Cart
+
+
 # Create your views here.
 
 class SubmittableLoginView(LoginView):
@@ -30,6 +33,17 @@ def profile_view(request):
 
     else:
         return redirect('/accounts/login/')
+
+
+class CartView(LoginRequiredMixin, ListView):
+    template_name = 'order.html'
+    model = Cart
+    login_url = '/accounts/login/'
+    redirect_field_name = 'redirect_to'
+
+    def get_queryset(self):
+        profile = Profile.objects.get(user=self.request.user)
+        return Cart.objects.filter(client=profile)
 
 
 # de adaugat functionalitatea ca userul sa se logheze
