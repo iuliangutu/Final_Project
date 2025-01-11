@@ -54,6 +54,8 @@ class OrderView(ListView):
     template_name = 'products.html'
     model = Product
 
+
+
     # def get_queryset(self):
     #     qs = super().get_queryset()
     #     order = Order.objects.get(name=self.kwargs[''])

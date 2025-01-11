@@ -81,3 +81,23 @@ class OrderLineDeleteView(LoginRequiredMixin, DeleteView):
     success_url = reverse_lazy('accounts:cart')
 
 
+def payment_proceed_view(request):
+
+
+    if request.user.is_authenticated:
+        try:
+            # Get the user's profile
+            profile = Profile.objects.get(user=request.user)
+
+            cart = Cart.objects.get(client=client, order=order)
+            # print(cart)
+
+            return redirect('accounts:payment_complete')
+        except Profile.DoesNotExist:
+            return redirect('accounts:profile')
+
+        except Cart.DoesNotExist:
+            return redirect('accounts:cart')
+    else:
+
+        return redirect('accounts:login')

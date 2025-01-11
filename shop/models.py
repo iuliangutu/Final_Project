@@ -71,6 +71,10 @@ class OrderLine(Model):
     quantity = IntegerField()
     product_price = ForeignKey(Order, null=True, on_delete=CASCADE) # de facut null=False
 
+    @property
+    def subtotal(self):
+        return self.quantity * self.product_price
+
     def __str__(self):
         return f"Order line no. {self.product}, {self.quantity}, {self.product_price}"
 

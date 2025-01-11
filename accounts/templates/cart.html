@@ -25,8 +25,18 @@
             <td><a href="{% url 'accounts:delete' item.pk %}"> Yes to confirm</a></td>
         </tr>
         {% endfor %}
+
     </table>
 
 </ul>
 
+<h3>Total cost: {{ cart.order.total_cost }} </h3>
+<form action="{% url 'accounts:payment_proceed' %}">
+    {% csrf_token %}
+    {{ form }}
+    <input type="Submit" value="Payment" class="btn btn-primary">
+</form>
+
 {% endblock %}
+
+
