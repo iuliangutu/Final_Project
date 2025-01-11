@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
+
 <h1>Your cart</h1>
 
 <ul>
@@ -10,7 +11,7 @@
           border:1px solid black;
         }
     </style>
-    <table style="width:100%">
+    <table style="width:100%" class="cart-table">
         <tr>
             <th>Produs </th>
             <th>Quantity </th>
@@ -34,7 +35,7 @@
 <form action="{% url 'accounts:payment_proceed' %}">
     {% csrf_token %}
     {{ form }}
-    <input type="Submit" value="Payment" class="btn btn-primary">
+    <input type="Submit" value="Payment" class="btn btn-Success">
 </form>
 
 {% endblock %}

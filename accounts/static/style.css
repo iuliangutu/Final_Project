@@ -1,0 +1,30 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #b3b5ae;
+    color: #333;
+}
+
+h1 {
+    color: #2c3e50;
+    text-align: center;
+
+}
+
+#img {
+    text-align: center;
+    }
+
+/* Button styles */
+.btn {
+    background-color: #3498db;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.btn:hover {
+    background-color: #2980b9;
+}

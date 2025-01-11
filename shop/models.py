@@ -48,6 +48,7 @@ class Product(Model):
     title = CharField(max_length=128)
     description = TextField()
     thumbnail = URLField(blank=True, null=True)
+    product_image = URLField(blank=True, null=True)
     category = ForeignKey(Category, on_delete=CASCADE)
     price = IntegerField()
     product_type = ForeignKey(ProductType, on_delete=CASCADE)
