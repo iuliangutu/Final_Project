@@ -97,7 +97,6 @@ class OrderLineDeleteView(LoginRequiredMixin, DeleteView):
     success_url = reverse_lazy('accounts:cart')  # Redirect to the cart page after deletion
 
     def delete(self, request, *args, **kwargs):
-        # Retrieve the OrderLine object being deleted
         self.object = self.get_object()
         order = self.object.order  # Get the associated order
 
