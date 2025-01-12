@@ -80,17 +80,37 @@ def add_to_cart_view(request, product_id):
 # de adaugat functionalitatea ca userul sa se logheze
 # atunci cand vrea sa faca o comanda
 
+# class OrderLineDeleteView(LoginRequiredMixin, DeleteView):
+#     template_name = 'order_line_confirm_delete.html'
+#     model = OrderLine
+#     success_url = reverse_lazy('accounts:cart')
+#
+#     def form_valid(self, form):
+#         self.order.total_cost = sum(item.product.price - item.quantity for item in self.order.orderline_set.all())
+#         self.order.save()
+#
+#         return super(form)
+
 class OrderLineDeleteView(LoginRequiredMixin, DeleteView):
     template_name = 'order_line_confirm_delete.html'
     model = OrderLine
-    success_url = reverse_lazy('accounts:cart')
+    success_url = reverse_lazy('accounts:cart')  # Redirect to the cart page after deletion
 
-    # # def form_valid(self, form):
-    #
-    #     self.order.total_cost = sum(item.product.price - item.quantity for item in self.order.orderline_set.all())
-    #     self.order.save()
-    #
-    #     return super(form)
+    def delete(self, request, *args, **kwargs):
+        # Retrieve the OrderLine object being deleted
+        self.object = self.get_object()
+        order = self.object.order  # Get the associated order
+
+        # Delete the OrderLine
+        response = super().delete(request, *args, **kwargs)
+
+        # Recalculate the total cost of the order
+        order.total_cost = sum(
+            item.product.price * item.quantity for item in order.orderline_set.all()
+        )
+        order.save()
+
+        return response
 
 
 
