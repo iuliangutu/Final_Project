@@ -4,6 +4,7 @@
 <form method="post">
   {% csrf_token %}
   <p>Are you sure you want to delete {{ cart.order_line }}?</p>
-  <input type="submit" value="Submit" class="btn btn-danger">
+  <input type="submit" value="Yes" class="btn btn-danger">
+  <a href="{% url 'accounts:cart' %}" class="btn btn-primary">Cancel</a>
 </form>
 {% endblock %}
