@@ -116,13 +116,37 @@ def payment_complete_view(request):
     return render(request, 'payment_complete.html')
 
 
-# o pagina pentru toate orders in care le filtram dupa client. models.py
+# o pagina pentru toate orders in care le filtram dupa client.
 # dupa request.user luam profilul clientului. Asta e prima pagina.
 
 # a doua pagina in care vad detaliile despre acel order. In pagina asta afisam orderlines pe care le filtram dupa order
 
 # view, template + url
 
+# class OrderListView(LoginRequiredMixin, ListView):
+#     model = Order
+#     template_name = 'orders_list.html'
+#     context_object_name = 'orders'
+#     login_url = '/accounts/login/'
+#     def get_queryset(self):
+#         return (Order.objects.filter(client__user=self.request.user))
 
 
 
+def client_orders_view(request):
+    if request.user.is_authenticated:
+        client_profile = request.user.profile
+        orders = Order.objects.filter(client=client_profile).order_by('-order_date')
+        return render(request, 'client_orders.html', {'orders':orders})
+    else:
+        return redirect('accounts:login')
+
+
+def previous_orders_view(request, pk):
+    if request.user.is_authenticated:
+        order = Order.objects.get(pk=pk)
+        order_lines = OrderLine.objects.filter(product_price=order)
+        return render(request, template_name='previous_order_details.html', context={'order_lines':order_lines})
+
+    else:
+        return redirect('accounts:login')

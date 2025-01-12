@@ -3,9 +3,9 @@
 <h1>Your orders</h1>
 
 <ul>
-    {% for cart in cart_list %}
+    {% for order in orders %}
     <li>
-        <a href="{% url 'product-view' product.pk %}"> {{ product.title }} </a>
+        <a href="{% url 'orders_list' order.pk %}"> {{ product.title }} </a>
     </li>
     {% endfor %}
 </ul>
