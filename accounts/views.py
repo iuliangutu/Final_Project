@@ -1,6 +1,5 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.auth.views import LoginView, PasswordChangeView
-from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.views import View
@@ -80,40 +79,17 @@ def add_to_cart_view(request, product_id):
 # de adaugat functionalitatea ca userul sa se logheze
 # atunci cand vrea sa faca o comanda
 
-# class OrderLineDeleteView(LoginRequiredMixin, DeleteView):
-#     template_name = 'order_line_confirm_delete.html'
-#     model = OrderLine
-#     success_url = reverse_lazy('accounts:cart')
-#
-#     # # def form_valid(self, form):
-#     #
-#     #     self.order.total_cost = sum(item.product.price - item.quantity for item in self.order.orderline_set.all())
-#     #     self.order.save()
-#     #
-#     #     return super(form)
-
 class OrderLineDeleteView(LoginRequiredMixin, DeleteView):
     template_name = 'order_line_confirm_delete.html'
     model = OrderLine
-    success_url = reverse_lazy('accounts:cart')  # Redirect to the cart page after deletion
+    success_url = reverse_lazy('accounts:cart')
 
-    def delete(self, request, *args, **kwargs):
-        # Retrieve the OrderLine object being deleted
-        self.object = self.get_object()
-        order = self.object.order  # Get the associated order
-
-        # Delete the OrderLine
-        response = super().delete(request, *args, **kwargs)
-
-        # Recalculate the total cost of the order
-        order.total_cost = sum(
-            item.product.price * item.quantity for item in order.orderline_set.all()
-        )
-        order.save()
-
-        return response
-
-
+    # def form_valid(self, form):
+    #
+    #     self.order.total_cost = sum(item.product.price * item.quantity for item in self.order.orderline_set.all())
+    #     self.order.save()
+    #
+    #     return super(form)
 
 
 def payment_proceed_view(request):
@@ -164,24 +140,15 @@ def payment_complete_view(request):
 
 
 
-# def client_orders_view(request):
-#     if request.user.is_authenticated:
-#         client_profile = request.user.profile
-#         orders = Order.objects.filter(client=client_profile).order_by('-order_date')
-#         return render(request, 'client_orders.html', {'orders':orders})
-#     else:
-#         return redirect('accounts:login')
-
 def client_orders_view(request):
     if request.user.is_authenticated:
         client_profile = request.user.profile
-
+        # Exclude the most recent order (by `order_date`)
         last_order = Order.objects.filter(client=client_profile).order_by('-order_date').first()
         if last_order:
             orders = Order.objects.filter(client=client_profile).exclude(id=last_order.id).order_by('-order_date')
         else:
             orders = Order.objects.filter(client=client_profile).order_by('-order_date')
-
         return render(request, 'client_orders.html', {'orders': orders})
     else:
         return redirect('accounts:login')
