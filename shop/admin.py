@@ -17,3 +17,6 @@ admin.site.register(Cart)
 # care sa preia datele din 'cart' sa le stocheze cu id-ul de comanda si sa stearga automat
 # de adaugat sugestii de produse in 'cart'
 
+
+# de rezolvat cand stergem un obiect din cart sa ne recalculeze totalul
+

@@ -21,7 +21,7 @@ class AddToCart:
             # Dacă există, actualizează cantitatea
             order_line.quantity += quantity
         else:
-            # Dacă nu există, creează un nou OrderLine
+        # Dacă nu există, creează un nou OrderLine
             order_line = OrderLine(product=product, quantity=quantity, product_price=product_price)
         order_line.save()
         cart.order_lines.add(order_line)
