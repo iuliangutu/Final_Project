@@ -26,21 +26,23 @@
                     <td><a href="{% url 'accounts:delete' item.pk %}"> Yes to confirm</a></td>
                 </tr>
                 {% endfor %}
-
             </table>
 
         </ul>
         <h3>Total cost: {{ cart.order.total_cost }} </h3>
-    <form action="{% url 'accounts:payment_proceed' %}">
-    {% csrf_token %}
-    {{ form }}
-        <input type="Submit" value="Payment" class="btn btn-Success">
-    </form>
 
+        <!-- Add Product Button -->
+        <a href="http://127.0.0.1:8000/" class="btn btn-primary">Add products</a><p></p>
+
+        <form action="{% url 'accounts:payment_proceed' %}">
+        {% csrf_token %}
+        {{ form }}
+            <input type="submit" value="Payment" class="btn btn-success">
+        </form>
     {% else %}
     <p>You have an empty bin</p>
 
+    <a href="http://127.0.0.1:8000/" class="btn btn-primary">Add products</a>
+
     {% endif %}
 {% endblock %}
-
-

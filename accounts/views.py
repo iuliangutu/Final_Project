@@ -84,6 +84,13 @@ class OrderLineDeleteView(LoginRequiredMixin, DeleteView):
     model = OrderLine
     success_url = reverse_lazy('accounts:cart')
 
+    # def form_valid(self, form):
+    #
+    #     self.order.total_cost = sum(item.product.price * item.quantity for item in self.order.orderline_set.all())
+    #     self.order.save()
+    #
+    #     return super(form)
+
 
 def payment_proceed_view(request):
 
@@ -136,8 +143,13 @@ def payment_complete_view(request):
 def client_orders_view(request):
     if request.user.is_authenticated:
         client_profile = request.user.profile
-        orders = Order.objects.filter(client=client_profile).order_by('-order_date')
-        return render(request, 'client_orders.html', {'orders':orders})
+        # Exclude the most recent order (by `order_date`)
+        last_order = Order.objects.filter(client=client_profile).order_by('-order_date').first()
+        if last_order:
+            orders = Order.objects.filter(client=client_profile).exclude(id=last_order.id).order_by('-order_date')
+        else:
+            orders = Order.objects.filter(client=client_profile).order_by('-order_date')
+        return render(request, 'client_orders.html', {'orders': orders})
     else:
         return redirect('accounts:login')
 
