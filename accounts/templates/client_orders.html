@@ -2,14 +2,27 @@
 {% block content %}
 <h1>Your Orders</h1>
 <ul>
-    {% for order in orders %}
-    <li>
-        <a href="{% url 'accounts:previous_order_details' order.pk %}">
-            Order #{{ order.id }} - {{ order.order_date }} - {{ order.status }}
-        </a>
-    </li>
-    {% empty %}
-    <p>No orders found.</p>
-    {% endfor %}
+
+    <style>
+        table, th, td {
+            border:1px solid black;
+        }
+    </style>
+    <table style="width:100%" class="cart-table">
+        <tr>
+            <th>Comanda </th>
+            <th>Data comenzii </th>
+            <th>Statusul comenzii </th>
+        </tr>
+        {% for order in orders %}
+        <tr>
+
+            <td><a href="{% url 'accounts:previous_order_details' order.pk %}"> {{ order.id }} </a></td>
+            <td> {{ order.order_date }} </td>
+            <td> {{ order.status }} </td>
+
+        </tr>
+        {% endfor %}
+
 </ul>
 {% endblock %}
