@@ -2,42 +2,45 @@
 {% block content %}
 
 <h1>Your cart</h1>
+    {% if cart != "" %}
+        <ul>
+            {{ cart }}
 
-<ul>
-    {{ cart }}
+            <style>
+                table, th, td {
+                  border:1px solid black;
+                }
+            </style>
+            <table style="width:100%" class="cart-table">
+                <tr>
+                    <th>Produs </th>
+                    <th>Quantity </th>
+                    <th>Price </th>
+                    <th>Delete </th>
+                </tr>
+                {% for item in cart.order_lines.all %}
+                <tr>
+                    <td> {{ item.product }} </td>
+                    <td> {{ item.quantity }} </td>
+                    <td> {{ item.product.price }} </td>
+                    <td><a href="{% url 'accounts:delete' item.pk %}"> Yes to confirm</a></td>
+                </tr>
+                {% endfor %}
 
-    <style>
-        table, th, td {
-          border:1px solid black;
-        }
-    </style>
-    <table style="width:100%" class="cart-table">
-        <tr>
-            <th>Produs </th>
-            <th>Quantity </th>
-            <th>Price </th>
-            <th>Delete </th>
-        </tr>
-        {% for item in cart.order_lines.all %}
-        <tr>
-            <td> {{ item.product }} </td>
-            <td> {{ item.quantity }} </td>
-            <td> {{ item.product.price }} </td>
-            <td><a href="{% url 'accounts:delete' item.pk %}"> Yes to confirm</a></td>
-        </tr>
-        {% endfor %}
+            </table>
 
-    </table>
-
-</ul>
-
-<h3>Total cost: {{ cart.order.total_cost }} </h3>
-<form action="{% url 'accounts:payment_proceed' %}">
+        </ul>
+        <h3>Total cost: {{ cart.order.total_cost }} </h3>
+    <form action="{% url 'accounts:payment_proceed' %}">
     {% csrf_token %}
     {{ form }}
-    <input type="Submit" value="Payment" class="btn btn-Success">
-</form>
+        <input type="Submit" value="Payment" class="btn btn-Success">
+    </form>
 
+    {% else %}
+    <p>You have an empty bin</p>
+
+    {% endif %}
 {% endblock %}
 
 

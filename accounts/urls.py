@@ -1,6 +1,7 @@
 from django.contrib.auth.views import LogoutView
 from django.urls import path
-from accounts.views import profile_view, CartView, add_to_cart_view, OrderLineDeleteView, payment_proceed_view
+from accounts.views import profile_view, CartView, add_to_cart_view, OrderLineDeleteView, payment_proceed_view, \
+    payment_complete_view
 
 from accounts.views import SubmittableLoginView, SubmittablePasswordChangeView, SignUpView
 from shop.views import ProductView
@@ -16,7 +17,7 @@ urlpatterns = [
     path('add-to-cart/<product_id>/', add_to_cart_view, name='add-to-cart'),
     path('delete/<pk>', OrderLineDeleteView.as_view(), name='delete'),
     path('payment_proceed', payment_proceed_view, name='payment_proceed'),
-    path('cart/<pk>', CartView.as_view())
+    path('payment_complete', payment_complete_view, name='payment_complete'),
     # path('', ProductView.as_view(), name='product-list')
     # # path('cart/products.html' )
 ]

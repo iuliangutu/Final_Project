@@ -67,6 +67,7 @@ class Order(Model):
     def __str__(self):
         return f"Order id #{self.id}"
 
+
 class OrderLine(Model):
     product = ForeignKey(Product, on_delete=CASCADE)
     quantity = IntegerField()

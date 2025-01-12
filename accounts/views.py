@@ -53,7 +53,11 @@ def profile_view(request):
 class CartView(LoginRequiredMixin, View):
     def get(self, request):
         profile = Profile.objects.get(user=self.request.user)
-        cart = Cart.objects.get(client=profile)
+        try:
+            cart = Cart.objects.get(client=profile)
+        except:
+            cart = ""
+
         return render(request, template_name='cart.html',
                       context={'cart': cart})
 
@@ -83,14 +87,15 @@ class OrderLineDeleteView(LoginRequiredMixin, DeleteView):
 
 def payment_proceed_view(request):
 
-
     if request.user.is_authenticated:
         try:
             # Get the user's profile
             profile = Profile.objects.get(user=request.user)
 
-            cart = Cart.objects.get(client=client, order=order)
+            cart = Cart.objects.get(client=profile)
             # print(cart)
+            cart.delete()
+            Order.objects.create(client=profile, status='pending')
 
             return redirect('accounts:payment_complete')
         except Profile.DoesNotExist:
@@ -101,3 +106,23 @@ def payment_proceed_view(request):
     else:
 
         return redirect('accounts:login')
+
+
+def payment_complete_view(request):
+
+    if not request.user.is_authenticated:
+        return redirect('accounts:login')
+
+    return render(request, 'payment_complete.html')
+
+
+# o pagina pentru toate orders in care le filtram dupa client. models.py
+# dupa request.user luam profilul clientului. Asta e prima pagina.
+
+# a doua pagina in care vad detaliile despre acel order. In pagina asta afisam orderlines pe care le filtram dupa order
+
+# view, template + url
+
+
+
+
