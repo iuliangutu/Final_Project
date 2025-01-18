@@ -128,3 +128,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 LOGOUT_REDIRECT_URL = '/'
+
+# sending email
+EMAIL_HOST = 'shophunters.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True

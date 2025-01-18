@@ -1,4 +1,4 @@
-from django.core.validators import MinLengthValidator
+from django.core.validators import MinLengthValidator, MinValueValidator, MaxValueValidator
 from django.db import models
 from django.db.models import CharField, Model, ForeignKey, DO_NOTHING, IntegerField, DateField, TextField, \
     DateTimeField, SlugField, URLField, ManyToManyField, CASCADE, OneToOneField
@@ -45,7 +45,7 @@ class Product(Model):
     price = IntegerField()
     product_type = ForeignKey(ProductType, on_delete=CASCADE)
     seller = ForeignKey(Seller, on_delete=CASCADE)
-    # rating
+    rating = IntegerField()
 
     def __str__(self):
         return self.title

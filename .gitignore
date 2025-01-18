@@ -6,6 +6,9 @@ __pycache__
 db.sqlite3
 media
 
+# local_settings
+./online_shop/local_settings.py
+
 # Backup files #
 *.bak
 

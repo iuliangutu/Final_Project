@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse_lazy
-from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView
+from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView, FormView
 
 from .forms import ProductForm
 from .models import Category, Seller, Product, ProductType, OrderLine, Order, Cart
@@ -11,6 +11,33 @@ from .models import Category, Seller, Product, ProductType, OrderLine, Order, Ca
 class ProductView(ListView):
     template_name = 'products.html'
     model = Product
+
+    def get_queryset(self):
+        # Start with all products
+        products = Product.objects.all()
+
+        # Get rating filter from GET request
+        rating = self.request.GET.get('rating', '')
+        if rating:
+            # Filter by rating if specified
+            products = products.filter(rating=rating)
+
+        # Get price sorting option from GET request
+        price = self.request.GET.get('price', '')
+        if price == 'ascending':
+            products = products.order_by('price')  # Ascending order
+        elif price == 'descending':
+            products = products.order_by('-price')  # Descending order
+
+        return products
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Add the rating and price_order to context so they can be used in the template
+        context['rating'] = self.request.GET.get('rating', '')
+        context['price_order'] = self.request.GET.get('price_order', '')
+        return context
+
 
 
 class ProductViewDetail(DetailView):
@@ -34,9 +61,6 @@ class CategoryView(ListView):
 #     category = get_object_or_404(Category, id=category_id)
 #     products = Product.objects.filter(category=category)
 #     return render(request, 'products.html', {'products': products, 'category': category})
-
-
-
 
 
 
@@ -70,4 +94,7 @@ class ProductDeleteView(DeleteView):
 class OrderView(ListView):
     template_name = 'products.html'
     model = Product
+
+
+
 

@@ -1,12 +1,39 @@
 {% extends 'base.html' %}
 {% block content %}
 <h1>Welcome to ShopHunters!</h1>
+
 <div class="text-center">
     <a class="mx-auto" href="#">
-        <img src="https://th.bing.com/th/id/R.a151756a5f3ad9b845ccec8415a6f44b?rik=jqofstf%2fIy9JOA&pid=ImgRaw&r=0" alt="Bootstrap" class="rounded" style="max-width: 300; height: 240px;">
+        <img src="https://th.bing.com/th/id/R.a151756a5f3ad9b845ccec8415a6f44b?rik=jqofstf%2fIy9JOA&pid=ImgRaw&r=0" alt="Bootstrap" class="rounded" style="max-width: 300px; height: 240px;">
     </a>
 </div>
+
 <div class="container mt-4">
+    <!-- Filter Form -->
+    <form method="get" class="mb-4 d-flex justify-content-between align-items-center">
+        <div class="form-group mb-0">
+            <label for="rating" class="mr-2">Filter by Rating:</label>
+            <select name="rating" id="rating" class="form-control">
+                <option value="">All Ratings</option>
+                {% for i in '12345' %}
+                <option value="{{ i }}" {% if request.GET.rating == i|stringformat:"s" %}selected{% endif %}>{{ i }} Star</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group mb-0">
+            <label for="price" class="mr-2">Sort by Price:</label>
+            <select name="price" id="price" class="form-control">
+                <option value="">No Sorting</option>
+                <option value="ascending" {% if request.GET.price == "ascending" %}selected{% endif %}>Low to High</option>
+                <option value="descending" {% if request.GET.price == "descending" %}selected{% endif %}>High to Low</option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Apply Filters</button>
+    </form>
+
+    <!-- Products List -->
     <div class="row">
         {% for product in product_list %}
         <div class="col-lg-3 col-md-4 col-sm-6 mb-4 d-flex align-items-stretch">
@@ -15,10 +42,14 @@
                 <div class="card-body">
                     <h5 class="card-title">{{ product.title }}</h5>
                     <p class="card-text">{{ product.description }}</p>
+                    <p class="card-text">Rating: {{ product.rating }}</p>
+                    <p class="card-text">Price: ${{ product.price }}</p>
                     <a href="{% url 'product-view' product.pk %}" class="btn btn-primary">View Details</a>
                 </div>
             </div>
         </div>
+        {% empty %}
+        <p>No products found.</p>
         {% endfor %}
     </div>
 </div>

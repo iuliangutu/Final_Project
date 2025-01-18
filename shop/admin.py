@@ -12,24 +12,18 @@ admin.site.register(OrderLine)
 admin.site.register(Cart)
 
 
-# de adaugat mesajul 'va multumim pentru cumparaturi' dupa apasarea butonului 'payment'
-# de adaugat 'Previous_Orders' in my profile
-# care sa preia datele din 'cart' sa le stocheze cu id-ul de comanda si sa stearga automat
-# de adaugat sugestii de produse in 'cart'
-
-
-
-# de rezolvat cand stergem un obiect din cart sa ne recalculeze totalul
-# de adaugat o optiune de filtrare (ex: dupa pret)
 # de adaugat mai multe categorii de produse (de ex: televizoare, laptopuri) - ok
 # de modificat design-ul la pagina principala de produse
 # optional* django how to send email pe google pentru a adauga functionalitatea de a trimite mail
 
 # 18.01
-# de adaugat copyright si contact
-# sugestii de alte produse
-# filtrare dupa pret si rating
-# sending email
-# la modelul product de adaugat 'rating'
+# order status de colorat 'pending' cu galben si 'completed' cu verde (de adaugat 'if' in client_orders.html)
+# de adaugat copyright si contact in base.html (footer)
+# sending email, de intrat in setarile de la contul de google nou-creat si cautat optiunea dezactivare 'bifa de securitate'
+# de configurat adresa de mail si mesajul care se afiseaza
+
+# optional* formular de contact
+# optional* sugestii de alte produse
+# optional* de rezolvat cand stergem un obiect din cart sa ne recalculeze totalul
 
 

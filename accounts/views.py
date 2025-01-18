@@ -9,6 +9,7 @@ from accounts.cart import AddToCart
 from accounts.forms import SignUpForm
 from accounts.models import Profile
 from shop.models import Order, OrderLine, Cart, Product, Category
+from django.core.mail import send_mail
 
 
 # Create your views here.
@@ -24,6 +25,15 @@ class SignUpView(CreateView):
     template_name = 'signup.html'
     form_class = SignUpForm
     success_url = '/'
+
+    def form_valid(self, form):
+        result = super().form_valid(form)
+        cleaned_data = form.cleaned_data
+
+        send_mail('My Subject', 'My message', 'adresa.noastra.de.mail@example.com',
+                  [cleaned_data['email']], fail_silently=True)
+
+        return result
 
 def profile_view(request):
     if request.user.is_authenticated:
@@ -149,6 +159,7 @@ def previous_orders_view(request, pk):
 
     else:
         return redirect('accounts:login')
+
 
 
 

@@ -2,7 +2,7 @@ import re
 from datetime import date
 
 from django.db.models import TextField
-from django.forms import ModelForm, CharField, IntegerField
+from django.forms import ModelForm, CharField, IntegerField, Form, DecimalField
 
 from shop.models import Product
 
@@ -23,5 +23,3 @@ class ProductForm(ModelForm):
 
         print(result)
         return result
-
-
