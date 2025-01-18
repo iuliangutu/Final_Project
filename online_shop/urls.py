@@ -20,7 +20,7 @@ from django.contrib import admin
 from django.urls import path, include
 
 from shop.views import ProductView, OrderView, ProductCreateView, ProductUpdateView, ProductDeleteView, \
-    ProductViewDetail
+    ProductViewDetail, CategoryProductView, CategoryView
 from accounts import urls as accounts_urls
 
 urlpatterns = [
@@ -31,4 +31,6 @@ urlpatterns = [
     path('update', ProductUpdateView.as_view(), name='product-update'),
     path('delete', ProductDeleteView.as_view(), name='product-delete'),
     path('product/<pk>', ProductViewDetail.as_view(), name='product-view'),
+    path('category/', CategoryView.as_view(), name='category'),
+    path('category/<str:category_name>', CategoryProductView.as_view(), name='category_name')
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

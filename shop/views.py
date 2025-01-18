@@ -17,10 +17,27 @@ class ProductViewDetail(DetailView):
     template_name = 'products_detail.html'
     model = Product
 
-    # def product_detail(request, product_id):
-    #     product = get_object_or_404(Product, id=product_id)
-    #     return render(request, 'products_detail.html',
-    #                   {'product': product})
+
+class CategoryProductView(ListView):
+    template_name = 'products.html'
+    model = Product
+    def get_queryset(self):
+        qs = super().get_queryset()
+        category = Category.objects.get(name=self.kwargs['category_name'])
+        return qs.filter(category=category)
+
+class CategoryView(ListView):
+    template_name = 'categories.html'
+    model = Category
+
+# def category_filter(request, category_id):
+#     category = get_object_or_404(Category, id=category_id)
+#     products = Product.objects.filter(category=category)
+#     return render(request, 'products.html', {'products': products, 'category': category})
+
+
+
+
 
 
 class ProductCreateView(CreateView):
@@ -54,8 +71,3 @@ class OrderView(ListView):
     template_name = 'products.html'
     model = Product
 
-
-
-    # def get_queryset(self):
-    #     qs = super().get_queryset()
-    #     order = Order.objects.get(name=self.kwargs[''])

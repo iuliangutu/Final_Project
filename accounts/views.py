@@ -8,7 +8,7 @@ from django.views.generic import CreateView, ListView, DeleteView
 from accounts.cart import AddToCart
 from accounts.forms import SignUpForm
 from accounts.models import Profile
-from shop.models import Order, OrderLine, Cart, Product
+from shop.models import Order, OrderLine, Cart, Product, Category
 
 
 # Create your views here.
@@ -35,19 +35,6 @@ def profile_view(request):
 
     else:
         return redirect('/accounts/login/')
-
-
-# class CartView(LoginRequiredMixin):
-#     template_name = 'cart.html'
-#     model = Cart
-#     login_url = '/accounts/login/'
-#     redirect_field_name = 'redirect_to'
-#
-#
-#
-#     def get_queryset(self):
-#         profile = Profile.objects.get(user=self.request.user)
-#         return Cart.objects.filter(client=profile)
 
 
 class CartView(LoginRequiredMixin, View):
@@ -162,3 +149,6 @@ def previous_orders_view(request, pk):
 
     else:
         return redirect('accounts:login')
+
+
+

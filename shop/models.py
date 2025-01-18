@@ -11,14 +11,6 @@ ORDER_STATUS_CHOICES = [('pending', 'Pending'), ('payment', 'Payment Confirmatio
                         ('shipped', 'Shipped'), ('status', 'Order Status'), # de adaugat redirect catre firma de curierat cu AWB
                         ('delivered', 'Delivered'), ('cancelled', 'Cancelled'),]
 
-# class Client(Model):
-#     class Meta:
-#         verbose_name_plural = "Client"
-#
-#     username = CharField(max_length=128)
-#     address = TextField()
-#     phone = CharField(max_length=15, validators=[MinLengthValidator(10)])
-#
 
 class Category(Model):
     class Meta:
