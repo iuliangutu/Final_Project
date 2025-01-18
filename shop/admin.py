@@ -21,8 +21,15 @@ admin.site.register(Cart)
 
 # de rezolvat cand stergem un obiect din cart sa ne recalculeze totalul
 # de adaugat o optiune de filtrare (ex: dupa pret)
-# de adaugat mai multe categorii de produse (de ex: televizoare, laptopuri)
+# de adaugat mai multe categorii de produse (de ex: televizoare, laptopuri) - ok
 # de modificat design-ul la pagina principala de produse
 # optional* django how to send email pe google pentru a adauga functionalitatea de a trimite mail
+
+# 18.01
+# de adaugat copyright si contact
+# sugestii de alte produse
+# filtrare dupa pret si rating
+# sending email
+# la modelul product de adaugat 'rating'
 
 

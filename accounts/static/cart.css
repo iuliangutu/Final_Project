@@ -46,7 +46,11 @@
     }
 
     .cart-table tr:hover td {
-        background-color: #2980b9;
+        background-color: #bbbfbc;
+    }
+
+    .cart-table tr:hover tr {
+        background-color: #bbbfbc;
     }
 
     .cart-summary {
@@ -74,7 +78,7 @@
     }
 
     .btn-success:hover {
-        background-color: #27ae60;
+        background-color: #bbbfbc;
     }
 
     .btn-delete {
@@ -92,4 +96,13 @@
         text-align: center;
         margin-top: 20px;
     }
+
+    .card {
+        border-radius: 10px;
+        width: 100%;
+        }
+
+    .card-img-top {
+        border-radius: 10px;
+        }
 </style>

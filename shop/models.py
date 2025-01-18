@@ -45,6 +45,7 @@ class Product(Model):
     price = IntegerField()
     product_type = ForeignKey(ProductType, on_delete=CASCADE)
     seller = ForeignKey(Seller, on_delete=CASCADE)
+    # rating
 
     def __str__(self):
         return self.title
