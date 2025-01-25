@@ -12,6 +12,7 @@ from shop.models import Order, OrderLine, Cart, Product, Category
 from django.core.mail import send_mail
 
 
+
 # Create your views here.
 
 class SubmittableLoginView(LoginView):
@@ -30,8 +31,10 @@ class SignUpView(CreateView):
         result = super().form_valid(form)
         cleaned_data = form.cleaned_data
 
-        send_mail('My Subject', 'My message', 'adresa.noastra.de.mail@example.com',
-                  [cleaned_data['email']], fail_silently=True)
+        send_mail('Account confirmation',
+                  'Welcome to Shop Hunters',
+                  'huntershopman@gmail.com',
+                  [cleaned_data['email']], fail_silently=False)
 
         return result
 
@@ -59,19 +62,16 @@ class CartView(LoginRequiredMixin, View):
                       context={'cart': cart})
 
 
-    # def actor_detail(request, actor_id):
-    #     actor = get_object_or_404(Actor, id=actor_id)
-    #     return render(request, 'actor_details.html', {'actor': actor})
-
-
 def add_to_cart_view(request, product_id):
     if request.user.is_authenticated:
         quantity = int(request.POST.get('quantity', 1))
+
         cart = AddToCart(request.user)
         cart.add_product(product_id, quantity, product_price=cart.order)
         return redirect(reverse_lazy('accounts:cart'))
     else:
         return redirect(reverse_lazy('accounts:login'))
+
 
 # de adaugat functionalitatea ca userul sa se logheze
 # atunci cand vrea sa faca o comanda
@@ -80,13 +80,6 @@ class OrderLineDeleteView(LoginRequiredMixin, DeleteView):
     template_name = 'order_line_confirm_delete.html'
     model = OrderLine
     success_url = reverse_lazy('accounts:cart')
-
-    # def form_valid(self, form):
-    #
-    #     self.order.total_cost = sum(item.product.price * item.quantity for item in self.order.orderline_set.all())
-    #     self.order.save()
-    #
-    #     return super(form)
 
 
 def payment_proceed_view(request):
@@ -117,6 +110,15 @@ def payment_complete_view(request):
     if not request.user.is_authenticated:
         return redirect('accounts:login')
 
+        # Get the user's profile
+        profile = Profile.objects.get(user=request.user)
+        cleaned_data = {'email': profile.user.email}
+
+        # Send the confirmation email
+        send_mail('Payment confirmation', 'Thank you for your purchase. Your payment was successful.',
+                  'huntershopman@example.com',
+                  [cleaned_data['email']], fail_silently=False)
+
     return render(request, 'payment_complete.html')
 
 
@@ -126,15 +128,6 @@ def payment_complete_view(request):
 # a doua pagina in care vad detaliile despre acel order. In pagina asta afisam orderlines pe care le filtram dupa order
 
 # view, template + url
-
-# class OrderListView(LoginRequiredMixin, ListView):
-#     model = Order
-#     template_name = 'orders_list.html'
-#     context_object_name = 'orders'
-#     login_url = '/accounts/login/'
-#     def get_queryset(self):
-#         return (Order.objects.filter(client__user=self.request.user))
-
 
 
 def client_orders_view(request):
@@ -159,7 +152,5 @@ def previous_orders_view(request, pk):
 
     else:
         return redirect('accounts:login')
-
-
 
 

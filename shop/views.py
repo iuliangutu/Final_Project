@@ -49,9 +49,27 @@ class CategoryProductView(ListView):
     template_name = 'products.html'
     model = Product
     def get_queryset(self):
-        qs = super().get_queryset()
         category = Category.objects.get(name=self.kwargs['category_name'])
-        return qs.filter(category=category)
+        products = Product.objects.filter(category=category)
+        # Get rating filter from GET request
+        rating = self.request.GET.get('rating', '')
+        if rating:
+            # Filter by rating if specified
+            products = products.filter(rating=rating)
+        # Get price sorting option from GET request
+        price = self.request.GET.get('price', '')
+        if price == 'ascending':
+            products = products.order_by('price')  # Ascending order
+        elif price == 'descending':
+            products = products.order_by('-price')  # Descending order
+        return products
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        category = Category.objects.get(name=self.kwargs['category_name'])
+        context['category_name'] = category.name
+        context['rating'] = self.request.GET.get('rating', '')
+        context['price_order'] = self.request.GET.get('price', '')
+        return context
 
 class CategoryView(ListView):
     template_name = 'categories.html'
