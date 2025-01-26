@@ -18,8 +18,8 @@ admin.site.register(Cart)
 
 # 18.01
 # order status de colorat 'pending' cu galben si 'completed' cu verde (de adaugat 'if' in client_orders.html)
-# de adaugat copyright si contact in base.html (footer)
-# sending email, de intrat in setarile de la contul de google nou-creat si cautat optiunea dezactivare 'bifa de securitate'
+# de adaugat copyright si contact in base.html (footer) - ok
+# sending email, de intrat in setarile de la contul de google nou-creat si cautat optiunea dezactivare 'bifa de securitate' - ok
 # de configurat adresa de mail si mesajul care se afiseaza
 
 # optional* formular de contact

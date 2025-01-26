@@ -1,5 +1,6 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.auth.views import LoginView, PasswordChangeView
+from django.http import HttpResponseForbidden
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.views import View
@@ -31,7 +32,7 @@ class SignUpView(CreateView):
         result = super().form_valid(form)
         cleaned_data = form.cleaned_data
 
-        send_mail('Account confirmation',
+        send_mail('Account registration',
                   'Welcome to Shop Hunters',
                   'huntershopman@gmail.com',
                   [cleaned_data['email']], fail_silently=False)
@@ -65,16 +66,20 @@ class CartView(LoginRequiredMixin, View):
 def add_to_cart_view(request, product_id):
     if request.user.is_authenticated:
         quantity = int(request.POST.get('quantity', 1))
-
+        profile = Profile.objects.get(user=request.user)
+        # Fetch all pending orders and ensure only one exists
+        pending_orders = Order.objects.filter(client=profile, status='pending')
+        if pending_orders.exists():
+            # If multiple pending orders exist, take the first one
+            order = pending_orders.first()
+            # Create a new pending order
+            order = Order.objects.create(client=profile, status='pending')
         cart = AddToCart(request.user)
         cart.add_product(product_id, quantity, product_price=cart.order)
         return redirect(reverse_lazy('accounts:cart'))
     else:
         return redirect(reverse_lazy('accounts:login'))
 
-
-# de adaugat functionalitatea ca userul sa se logheze
-# atunci cand vrea sa faca o comanda
 
 class OrderLineDeleteView(LoginRequiredMixin, DeleteView):
     template_name = 'order_line_confirm_delete.html'
@@ -104,21 +109,35 @@ def payment_proceed_view(request):
 
         return redirect('accounts:login')
 
+# varianta anterioara
+# def payment_complete_view(request):
+#
+#     if not request.user.is_authenticated:
+#         return redirect('accounts:login')
+#
+#         # Get the user's profile
+#         profile = Profile.objects.get(user=request.user)
+#         cleaned_data = {'email': profile.user.email}
+#
+#         # Send the confirmation email
+#         send_mail('Payment confirmation', 'Thank you for your purchase. Your payment was successful.',
+#                   'huntershopman@example.com',
+#                   [cleaned_data['email']], fail_silently=False)
+#
+#     return render(request, 'payment_complete.html')
 
+
+# varianta identata corect
 def payment_complete_view(request):
-
     if not request.user.is_authenticated:
         return redirect('accounts:login')
-
-        # Get the user's profile
-        profile = Profile.objects.get(user=request.user)
-        cleaned_data = {'email': profile.user.email}
-
-        # Send the confirmation email
-        send_mail('Payment confirmation', 'Thank you for your purchase. Your payment was successful.',
-                  'huntershopman@example.com',
-                  [cleaned_data['email']], fail_silently=False)
-
+    # Get the user's profile
+    profile = Profile.objects.get(user=request.user)
+    cleaned_data = {'email': profile.user.email}
+    # Send the confirmation email
+    send_mail('Payment confirmation', 'Thank you for your purchase. Your payment was successful.',
+              'huntershopman@gmail.com',
+              [cleaned_data['email']], fail_silently=False)
     return render(request, 'payment_complete.html')
 
 
