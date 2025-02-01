@@ -67,15 +67,21 @@ def add_to_cart_view(request, product_id):
     if request.user.is_authenticated:
         quantity = int(request.POST.get('quantity', 1))
         profile = Profile.objects.get(user=request.user)
-        # Fetch all pending orders and ensure only one exists
-        pending_orders = Order.objects.filter(client=profile, status='pending')
-        if pending_orders.exists():
-            # If multiple pending orders exist, take the first one
-            order = pending_orders.first()
-            # Create a new pending order
+
+        # ✅ Ensure only one pending order exists
+        order = Order.objects.filter(client=profile, status='pending').first()
+        if not order:
             order = Order.objects.create(client=profile, status='pending')
-        cart = AddToCart(request.user)
-        cart.add_product(product_id, quantity, product_price=cart.order)
+
+
+        cart = Cart.objects.filter(client=profile).first()
+        if not cart:
+            cart = Cart.objects.create(client=profile, order=order)
+
+        # ✅ Fix `product_price` issue (should be product.price)
+        cart_instance = AddToCart(request.user)
+        cart_instance.add_product(product_id, quantity, product_price=Product.objects.get(pk=product_id).price)
+
         return redirect(reverse_lazy('accounts:cart'))
     else:
         return redirect(reverse_lazy('accounts:login'))
@@ -85,6 +91,15 @@ class OrderLineDeleteView(LoginRequiredMixin, DeleteView):
     template_name = 'order_line_confirm_delete.html'
     model = OrderLine
     success_url = reverse_lazy('accounts:cart')
+
+    def delete(self, request, *args, **kwargs):
+        order_line = self.get_object()
+        order = order_line.product_price  # Get the related order
+        response = super().delete(request, *args, **kwargs)
+        # Recalculate order total cost
+        order.total_cost = sum(item.product.price * item.quantity for item in order.orderline_set.all())
+        order.save()
+        return response
 
 
 def payment_proceed_view(request):
@@ -109,25 +124,7 @@ def payment_proceed_view(request):
 
         return redirect('accounts:login')
 
-# varianta anterioara
-# def payment_complete_view(request):
-#
-#     if not request.user.is_authenticated:
-#         return redirect('accounts:login')
-#
-#         # Get the user's profile
-#         profile = Profile.objects.get(user=request.user)
-#         cleaned_data = {'email': profile.user.email}
-#
-#         # Send the confirmation email
-#         send_mail('Payment confirmation', 'Thank you for your purchase. Your payment was successful.',
-#                   'huntershopman@example.com',
-#                   [cleaned_data['email']], fail_silently=False)
-#
-#     return render(request, 'payment_complete.html')
 
-
-# varianta identata corect
 def payment_complete_view(request):
     if not request.user.is_authenticated:
         return redirect('accounts:login')

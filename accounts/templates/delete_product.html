@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block content %}
+<form method="post">
+  {% csrf_token %}
+  <p>Are you sure you want to delete {{ cart.order_line.product.name }}?</p>
+  <p>Product Cost: {{ cart.order_line.product.price * cart.order_line.quantity }}</p>
+  <input type="submit" value="Yes" class="btn btn-danger">
+  <a href="{% url 'accounts:cart' %}" class="btn btn-primary">Cancel</a>
+</form>
+{% if removed_products %}
+  <h3>Removed Products</h3>
+  <ul>
+    {% for product, cost in removed_products %}
+      <li>{{ product.name }}: {{ cost }}</li>
+    {% endfor %}
+  </ul>
+  <p>Total Cost of Removed Products: {{ removed_products_total_cost }}</p>
+{% endif %}
+<p>New Total Cost: {{ new_total_cost }}</p>
+{% endblock %}

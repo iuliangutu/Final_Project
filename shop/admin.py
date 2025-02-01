@@ -25,5 +25,12 @@ admin.site.register(Cart)
 # optional* formular de contact
 # optional* sugestii de alte produse
 # optional* de rezolvat cand stergem un obiect din cart sa ne recalculeze totalul
+# optional* de cautat cum sa adaugam mai multe poze la produs
 
+
+### PENTRU PREZENTARE
+# screenshot functie trimitere mail/gmail
+# scurt video cu functionalitatile site-ului
+# screenshot partea de admin
+# screenshot tree-ul din pycharm
 

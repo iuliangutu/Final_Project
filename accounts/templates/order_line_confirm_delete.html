@@ -3,8 +3,11 @@
 {% block content %}
 <form method="post">
   {% csrf_token %}
-  <p>Are you sure you want to delete {{ cart.order_line }}?</p>
-  <input type="submit" value="Yes" class="btn btn-danger">
+  <p>Are you sure you want to delete {{ order_line.product.title }} from your cart?</p>
+
+  <input type="hidden" name="product_id" value="{{ order_line.product.id }}">
+
+  <input type="submit" value="Yes, delete" class="btn btn-danger">
   <a href="{% url 'accounts:cart' %}" class="btn btn-primary">Cancel</a>
 </form>
 {% endblock %}

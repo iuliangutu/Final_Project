@@ -1,74 +1,72 @@
+import profile
+
 from accounts.models import Profile
 from shop.models import Product, Order, OrderLine, Cart
 from django.contrib.auth.models import User
 
-
-### clasa care era inainte de chatgpt
 class AddToCart:
     def __init__(self, user):
         self.user = user
-        self.profile = Profile.objects.get(user=self.user)
-        self.order = Order.objects.filter(client=self.profile, status='pending').latest('order_date')
+
+        # Ensure Profile exists
+        self.profile, created = Profile.objects.get_or_create(user=self.user)
+
+        self.order = Order.objects.filter(client=self.profile, status='pending').first()
+        if not self.order:
+            self.order = Order.objects.create(client=self.profile, status='pending')
 
     def add_product(self, product_id, quantity, product_price):
         product = Product.objects.get(pk=product_id)
 
-        if not self.order:
-            self.order = Order.objects.create(client=self.profile, status='pending')
+        cart = Cart.objects.filter(client=self.profile).first()
+        if not cart:
+            cart = Cart.objects.create(client=self.profile, order=self.order)
 
-        # Verifică dacă există deja un OrderLine pentru acest produs în comanda curentă
-        cart, created = Cart.objects.get_or_create(order=self.order, client=self.profile)
-        order_line = cart.order_lines.all().filter(product=product).first()
+        # Check if an OrderLine already exists for this product
+        order_line = cart.order_lines.filter(product=product).first()
+
         if order_line:
-            # Dacă există, actualizează cantitatea
-            order_line.quantity += quantity
+            order_line.quantity += quantity  # Update quantity
+            order_line.save()
         else:
-        # Dacă nu există, creează un nou OrderLine
-            order_line = OrderLine(product=product, quantity=quantity, product_price=product_price)
-        order_line.save()
-        cart.order_lines.add(order_line)
-        print(cart)
+            order_line = OrderLine.objects.create(  # Save directly to DB
+                order=self.order,
+                product=product,
+                quantity=quantity,
+                product_price=product_price  # Pass the correct number, NOT an Order!
+            )
+            cart.order_lines.add(order_line)  # Add to Cart AFTER saving to DB
 
         self.recalculate_cost()
         return order_line
 
-### clasa de pe chatGPT cu 'try' 'except' blocks
-# class AddToCart:
-#     def __init__(self, user):
-#         self.user = user
-#         self.profile = Profile.objects.get(user=self.user)
-#
-#         try:
-#             # Try to get the latest pending order for the user
-#             self.order = Order.objects.filter(client=self.profile, status='pending').latest('order_date')
-#         except Order.DoesNotExist:
-#             # If no pending order exists, create a new one
-#             self.order = Order.objects.create(client=self.profile, status='pending')
-#
-#     def add_product(self, product_id, quantity, product_price):
-#         product = Product.objects.get(pk=product_id)
-#
-#         # If order doesn't exist, create it (this logic is handled in __init__)
-#         if not self.order:
-#             self.order = Order.objects.create(client=self.profile, status='pending')
-#
-#         # Verifică dacă există deja un OrderLine pentru acest produs în comanda curentă
-#         cart, created = Cart.objects.get_or_create(order=self.order, client=self.profile)
-#         order_line = cart.order_lines.all().filter(product=product).first()
-#         if order_line:
-#             # Dacă există, actualizează cantitatea
-#             order_line.quantity += quantity
-#         else:
-#             # Dacă nu există, creează un nou OrderLine
-#             order_line = OrderLine(product=product, quantity=quantity, product_price=product_price)
-#
-#         order_line.save()
-#         cart.order_lines.add(order_line)
-#
-#         self.recalculate_cost()  # Ensure the cost is recalculated after adding the product
-#         return order_line
+    # varianta inainte de chatgpt
+    # def recalculate_cost(self):
+    #     self.order.total_cost = sum(item.product.price * item.quantity for item in self.order.cart.order_lines.all())
+    #     self.order.save()
+    #     print("Your order is recalculated to have a total cost of:", self.order.total_cost)
 
+    # chatgpt
     def recalculate_cost(self):
-        self.order.total_cost = sum(item.product.price * item.quantity for item in self.order.orderline_set.all())
-        self.order.save()
+        self.order.total_cost = sum(item.product.price * item.quantity for item in self.order.cart.order_lines.all())
+        self.order.save(update_fields=["total_cost"])  # Explicitly saving only the total_cost field
         print("Your order is recalculated to have a total cost of:", self.order.total_cost)
+
+    def remove_product(self, product_id):
+        """Remove a product from the cart and recalculate total cost."""
+        product = Product.objects.get(pk=product_id)
+        order_line = self.order.order_lines.filter(product=product).first()
+
+        if order_line:
+            order_line.delete()  # Remove the product from the cart
+            self.recalculate_cost()  # Recalculate total cost after deletion
+
+            # Refresh order and queryset
+            self.order.refresh_from_db()
+            self.order.order_lines.all().refresh_from_db()
+
+            print(f"Product {product.name} removed. New total cost: {self.order.total_cost}")
+    def remove_product_and_display_total(self, product_id):
+        """Remove a product and print the updated total cost."""
+        self.remove_product(product_id)
+        print(f"Updated total cost: {self.order.total_cost}")

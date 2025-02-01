@@ -1,8 +1,9 @@
 from django.core.validators import MinLengthValidator, MinValueValidator, MaxValueValidator
 from django.db import models
 from django.db.models import CharField, Model, ForeignKey, DO_NOTHING, IntegerField, DateField, TextField, \
-    DateTimeField, SlugField, URLField, ManyToManyField, CASCADE, OneToOneField
+    DateTimeField, SlugField, URLField, ManyToManyField, CASCADE, OneToOneField, PositiveIntegerField, DecimalField
 
+import shop.models
 from accounts.models import Profile
 
 # Create your models here.
@@ -45,7 +46,7 @@ class Product(Model):
     price = IntegerField()
     product_type = ForeignKey(ProductType, on_delete=CASCADE)
     seller = ForeignKey(Seller, on_delete=CASCADE)
-    rating = IntegerField()
+    rating = IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)])
 
     def __str__(self):
         return self.title
@@ -62,16 +63,17 @@ class Order(Model):
 
 
 class OrderLine(Model):
-    product = ForeignKey(Product, on_delete=CASCADE)
+    order = ForeignKey('shop.Order', on_delete=CASCADE)
+    product = ForeignKey('shop.Product', on_delete=CASCADE)
     quantity = IntegerField()
-    product_price = ForeignKey(Order, null=True, on_delete=CASCADE) # de facut null=False
+    product_price = DecimalField(max_digits=10, decimal_places=2)
 
     @property
     def subtotal(self):
         return self.quantity * self.product_price
 
     def __str__(self):
-        return f"Order line no. {self.product}, {self.quantity}, {self.product_price}"
+        return f"{self.quantity} x {self.product.title} at {self.product_price} each"
 
 
 
