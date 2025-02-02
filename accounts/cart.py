@@ -70,3 +70,5 @@ class AddToCart:
         """Remove a product and print the updated total cost."""
         self.remove_product(product_id)
         print(f"Updated total cost: {self.order.total_cost}")
+
+

@@ -19,7 +19,6 @@ class ProductForm(ModelForm):
 
     def clean(self):
         result = super().clean()
-        # if result['order']:
 
         print(result)
         return result

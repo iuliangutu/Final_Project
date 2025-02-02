@@ -68,7 +68,6 @@ def add_to_cart_view(request, product_id):
         quantity = int(request.POST.get('quantity', 1))
         profile = Profile.objects.get(user=request.user)
 
-        # ✅ Ensure only one pending order exists
         order = Order.objects.filter(client=profile, status='pending').first()
         if not order:
             order = Order.objects.create(client=profile, status='pending')
@@ -78,7 +77,6 @@ def add_to_cart_view(request, product_id):
         if not cart:
             cart = Cart.objects.create(client=profile, order=order)
 
-        # ✅ Fix `product_price` issue (should be product.price)
         cart_instance = AddToCart(request.user)
         cart_instance.add_product(product_id, quantity, product_price=Product.objects.get(pk=product_id).price)
 
@@ -106,11 +104,8 @@ def payment_proceed_view(request):
 
     if request.user.is_authenticated:
         try:
-            # Get the user's profile
             profile = Profile.objects.get(user=request.user)
-
             cart = Cart.objects.get(client=profile)
-            # print(cart)
             cart.delete()
             Order.objects.create(client=profile, status='pending')
 
@@ -124,26 +119,17 @@ def payment_proceed_view(request):
 
         return redirect('accounts:login')
 
-
 def payment_complete_view(request):
     if not request.user.is_authenticated:
         return redirect('accounts:login')
-    # Get the user's profile
     profile = Profile.objects.get(user=request.user)
     cleaned_data = {'email': profile.user.email}
-    # Send the confirmation email
-    send_mail('Payment confirmation', 'Thank you for your purchase. Your payment was successful.',
+    # send the confirmation email
+    send_mail('Payment confirmation',
+              'Thank you for your purchase. Your payment was successful.',
               'huntershopman@gmail.com',
               [cleaned_data['email']], fail_silently=False)
     return render(request, 'payment_complete.html')
-
-
-# o pagina pentru toate orders in care le filtram dupa client.
-# dupa request.user luam profilul clientului. Asta e prima pagina.
-
-# a doua pagina in care vad detaliile despre acel order. In pagina asta afisam orderlines pe care le filtram dupa order
-
-# view, template + url
 
 
 def client_orders_view(request):
@@ -169,4 +155,9 @@ def previous_orders_view(request, pk):
     else:
         return redirect('accounts:login')
 
+# o pagina pentru toate orders in care le filtram dupa client.
+# dupa request.user luam profilul clientului. Asta e prima pagina.
 
+# a doua pagina in care vad detaliile despre acel order. In pagina asta afisam orderlines pe care le filtram dupa order
+
+# view, template + url

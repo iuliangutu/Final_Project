@@ -34,3 +34,13 @@ admin.site.register(Cart)
 # screenshot partea de admin
 # screenshot tree-ul din pycharm
 
+#01.02
+# SLIDE-URI
+# am ramas la cel cu modele
+# de continuat cu slide-ul cu views,
+# slide-ul cu templates
+# slide cu URL-uri
+
+# slide cu potentiale dezvoltari
+
+

@@ -3,7 +3,7 @@
 {% block content %}
 
 
-<h1>Product: {{ object.title }}</h1>
+<h1>{{ object.title }}</h1>
     <div class="text-center">
     {% if product.product_image %}
         <img src="{{ product.product_image }}" alt="{{ product.title.title }}" style="max-width: 200px;">

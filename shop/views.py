@@ -75,12 +75,6 @@ class CategoryView(ListView):
     template_name = 'categories.html'
     model = Category
 
-# def category_filter(request, category_id):
-#     category = get_object_or_404(Category, id=category_id)
-#     products = Product.objects.filter(category=category)
-#     return render(request, 'products.html', {'products': products, 'category': category})
-
-
 
 class ProductCreateView(CreateView):
     template_name = 'form.html'
