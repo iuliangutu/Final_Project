@@ -99,25 +99,53 @@ class OrderLineDeleteView(LoginRequiredMixin, DeleteView):
         order.save()
         return response
 
+#inainte de chatgpt
+# def payment_proceed_view(request):
+#
+#     if request.user.is_authenticated:
+#         try:
+#             profile = Profile.objects.get(user=request.user)
+#             cart = Cart.objects.get(client=profile)
+#             cart.delete()
+#             Order.objects.create(client=profile, status='pending')
+#
+#             return redirect('accounts:payment_complete')
+#         except Profile.DoesNotExist:
+#             return redirect('accounts:profile')
+#
+#         except Cart.DoesNotExist:
+#             return redirect('accounts:cart')
+#     else:
+#
+#         return redirect('accounts:login')
 
+
+# chatgpt
 def payment_proceed_view(request):
-
     if request.user.is_authenticated:
         try:
             profile = Profile.objects.get(user=request.user)
             cart = Cart.objects.get(client=profile)
+
+            # Complete the order and set status to 'payment'
+            cart.order.status = 'payment'
+            cart.order.save()
+
+            # Now delete the cart since payment is processed
             cart.delete()
+
+            # Create a new order for any future purchases
             Order.objects.create(client=profile, status='pending')
 
             return redirect('accounts:payment_complete')
         except Profile.DoesNotExist:
             return redirect('accounts:profile')
-
         except Cart.DoesNotExist:
             return redirect('accounts:cart')
     else:
-
         return redirect('accounts:login')
+
+
 
 def payment_complete_view(request):
     if not request.user.is_authenticated:
@@ -149,7 +177,7 @@ def client_orders_view(request):
 def previous_orders_view(request, pk):
     if request.user.is_authenticated:
         order = Order.objects.get(pk=pk)
-        order_lines = OrderLine.objects.filter(product_price=order)
+        order_lines = OrderLine.objects.filter(order=order)
         return render(request, template_name='previous_order_details.html', context={'order_lines':order_lines})
 
     else:
