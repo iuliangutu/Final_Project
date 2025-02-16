@@ -1,0 +1,78 @@
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    font-family: Arial, sans-serif;
+    background-color: #b3b5ae;
+    color: #333;
+}
+
+h1 {
+    color: #2c3e50;
+    text-align: center;
+}
+
+#img {
+    text-align: center;
+}
+
+/* Button styles */
+.btn {
+    background-color: #3498db;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.btn:hover {
+    background-color: #bbbfbc;
+}
+
+/* Flexbox container */
+.flex-container {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.container {
+    flex: 1;
+}
+
+.footer {
+    background-color: #f8f9fa;
+    padding: 1rem 0;
+    margin-top: auto;
+    position: relative;
+    width: 100%;
+}
+
+.list-inline {
+    padding: 0;
+    list-style: none;
+}
+
+.list-inline-item {
+    display: inline;
+    margin-right: 1rem;
+}
+
+.about-content {
+    display: flex;
+    flex-direction: column; /* Stack image and text vertically */
+    align-items: center; /* Center the content horizontally */
+    justify-content: flex-start; /* Align content to the top */
+    height: auto; /* Allow height to adjust to content */
+    width: 200px; /* Set a fixed width for the content */
+}
+
+.about-text {
+    text-align: left; /* Align text to the left */
+    margin-top: 10px; /* Space between the image and the text */
+    line-height: 1.6; /* Set line spacing for better readability */
+    max-width: 200px; /* Constrain the width of the paragraph */
+    word-wrap: break-word; /* Break long words if necessary */
+}

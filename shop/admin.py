@@ -40,7 +40,11 @@ admin.site.register(Cart)
 # de continuat cu slide-ul cu views,
 # slide-ul cu templates
 # slide cu URL-uri
-
 # slide cu potentiale dezvoltari
 
+# 08.02 - Prezentarea este gata si a fost trimisa
+# de personalizat footer-ul cu link-urile aferente
+# de adaugat functionalitate JS de cautare produse (A se vedea ex. 7 din course part3 html, css, js)
 
+
+# 16.02 - Footer-ul a fost personalizat

@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="container">
+    <h1>About Us</h1><br>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="about-section">
+                <h2>Costin</h2>
+                <div class="about-content">
+                    <img src="{% static 'costin.jpg' %}" alt="Costin" width="200" height="200">
+                    <p class="about-text">Costin is a software engineer with a passion for e-commerce and web development. He has over 5 years of experience in the industry and loves creating innovative solutions for online businesses.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="about-section">
+                <h2>Iulian</h2>
+                <div class="about-content">
+                    <img src="{% static 'iulian.jpg' %}" alt="Iulian" width="200" height="200">
+                    <p class="about-text">Iulian is a dedicated developer who specializes in front-end development. With his keen eye for design and user experience, he ensures that every website looks great and functions smoothly.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
