@@ -1,5 +1,6 @@
 from django.contrib.auth.views import LogoutView
 from django.urls import path
+
 from accounts.views import profile_view, CartView, add_to_cart_view, OrderLineDeleteView, payment_proceed_view, \
     payment_complete_view, client_orders_view, previous_orders_view
 
@@ -15,6 +16,7 @@ urlpatterns = [
     path('profile/', profile_view, name='profile'),
     path('cart/', CartView.as_view(), name='cart'),
     path('add-to-cart/<product_id>/', add_to_cart_view, name='add-to-cart'),
+    # path('cart/remove/<int:product_id>/', OrderLineDeleteView.as_view(), name='remove-from-cart'),
     path('delete/<pk>', OrderLineDeleteView.as_view(), name='delete'),
     path('payment_proceed', payment_proceed_view, name='payment_proceed'),
     path('payment_complete', payment_complete_view, name='payment_complete'),

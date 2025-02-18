@@ -76,7 +76,6 @@ class OrderLine(Model):
         return f"{self.quantity} x {self.product.title} at {self.product_price} each"
 
 
-
 class Cart(Model):
     order = OneToOneField(Order, on_delete=CASCADE)
     order_lines = ManyToManyField(OrderLine)

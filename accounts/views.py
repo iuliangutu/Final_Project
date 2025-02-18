@@ -1,9 +1,11 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.auth.views import LoginView, PasswordChangeView
-from django.http import HttpResponseForbidden
+from django.http import HttpResponseForbidden, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
+from django.utils.decorators import method_decorator
 from django.views import View
+from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import CreateView, ListView, DeleteView
 
 from accounts.cart import AddToCart
@@ -84,7 +86,6 @@ def add_to_cart_view(request, product_id):
     else:
         return redirect(reverse_lazy('accounts:login'))
 
-
 class OrderLineDeleteView(LoginRequiredMixin, DeleteView):
     template_name = 'order_line_confirm_delete.html'
     model = OrderLine
@@ -99,28 +100,7 @@ class OrderLineDeleteView(LoginRequiredMixin, DeleteView):
         order.save()
         return response
 
-#inainte de chatgpt
-# def payment_proceed_view(request):
-#
-#     if request.user.is_authenticated:
-#         try:
-#             profile = Profile.objects.get(user=request.user)
-#             cart = Cart.objects.get(client=profile)
-#             cart.delete()
-#             Order.objects.create(client=profile, status='pending')
-#
-#             return redirect('accounts:payment_complete')
-#         except Profile.DoesNotExist:
-#             return redirect('accounts:profile')
-#
-#         except Cart.DoesNotExist:
-#             return redirect('accounts:cart')
-#     else:
-#
-#         return redirect('accounts:login')
 
-
-# chatgpt
 def payment_proceed_view(request):
     if request.user.is_authenticated:
         try:
@@ -183,9 +163,4 @@ def previous_orders_view(request, pk):
     else:
         return redirect('accounts:login')
 
-# o pagina pentru toate orders in care le filtram dupa client.
-# dupa request.user luam profilul clientului. Asta e prima pagina.
 
-# a doua pagina in care vad detaliile despre acel order. In pagina asta afisam orderlines pe care le filtram dupa order
-
-# view, template + url

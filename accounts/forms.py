@@ -30,5 +30,4 @@ class SignUpForm(UserCreationForm):
 
         return result
 
-    ## de adaugat functionalitatea cum ca utilizatorul poate primi mesaje de la vanzator
 
